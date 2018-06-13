@@ -5,39 +5,54 @@
 }
 
 @section scripts{
-    <script>
-        function createFunctions0() {
-            var result = new Array();
+<script>
+    function createFunctions0() {
+        var result = new Array();
 
-            for (var i = 0; i < 10; i++) {
-                result[i] = function () {
-                    return i;
-                };
-            }
-
-            return result;
+        for (var i = 0; i < 10; i++) {
+            result[i] = function () {
+                return i;
+            };
         }
 
-        function createFunctions() {
-            var result = new Array();
+        return result;
+    }
+    function createFunctions() {
+        var result = new Array();
 
-            for (var i = 0; i < 10; i++) {
-                result[i] = function (num) {
-                    return function () { return num; };
-                }(i);
-            }
-
-            return result;
+        for (var i = 0; i < 10; i++) {
+            result[i] = function (num) {
+                return function () { return num; };
+            }(i);
         }
 
-        $(document).ready(function () {
-            var r0 = createFunctions0();
-            console.log(r0[1]()); 
+        return result;
+    }
+    // 1.闭包与变量
+    var r0 = createFunctions0();
+    console.log(r0[1]());
+    var r = createFunctions();
+    console.log(r[1]());
 
-            var r = createFunctions();
-            console.log(r[1]());
-        })
-    </script>
+    var name = 'The Window';
+    var object = {
+        name: 'My Object',
+        getNameFunc: function () {
+            return function () {
+                return this.name;
+            }
+        },
+        getNameFunc1: function () {
+            var that = this;
+            return function () {
+                return that.name;
+            }
+        }
+    };
+    // 2.this对象
+    console.log(object.getNameFunc()());
+    console.log(object.getNameFunc1()());
+</script>
 }
 
 <h1>Pro JS</h1>
