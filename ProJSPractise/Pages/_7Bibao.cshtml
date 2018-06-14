@@ -1,0 +1,155 @@
+﻿<h1>第七章 函数表达式</h1>
+<script>
+    // 1.闭包与变量
+    function createFunctions0() {
+        var result = new Array();
+
+        for (var i = 0; i < 10; i++) {
+            result[i] = function () {
+                return i;
+            };
+        }
+
+        return result;
+    }
+    function createFunctions() {
+        var result = new Array();
+
+        for (var i = 0; i < 10; i++) {
+            result[i] = function (num) {
+                return function () { return num; };
+            }(i);
+        }
+
+        return result;
+    }
+    var r0 = createFunctions0();
+    console.log(r0[1]());
+    var r = createFunctions();
+    console.log(r[1]());
+
+    // 2.this对象
+    var name = 'The Window';
+    var object = {
+        name: 'My Object',
+        getNameFunc: function () {
+            return function () {
+                return this.name;
+            }
+        },
+        getNameFunc1: function () {
+            var that = this;
+            return function () {
+                return that.name;
+            }
+        }
+    };
+    console.log(object.getNameFunc()());
+    console.log(object.getNameFunc1()());
+
+    // 3.模仿块级作用域
+    function outputNumbers(count) {
+        for (var i = 0; i < count; i++) {
+            console.log('for:' + i);
+        }
+
+        var i;
+        console.log('out:' + i); // 5
+    }
+    outputNumbers(5);
+
+    function outputNumbers1(count) {
+        (function () {
+            for (var i = 0; i < count; i++) { console.log('for:' + i); }
+        })();
+
+        //console.log('out:' + i); // error:i is not defined
+    }
+    outputNumbers1(5);
+
+    // 4.私有变量
+    function Person(name) {
+        this.getName = function () { return name; };
+        this.setName = function (value) { name = value; };
+    }
+    var person = new Person('Joe');
+    console.log('4:' + person.getName());
+    person.setName('Li');
+    console.log('4.1:' + person.getName());
+
+    // 4.1 静态私有变量
+    (function () {
+        var name = '';
+        Person1 = function (value) { name = value; };
+        Person1.prototype.getName = function () { return name; };
+        Person1.prototype.setName = function (value) { name = value; };
+    })();
+    var person1 = new Person1("Nicholas");
+    console.log(person1.getName()); //"Nicholas"
+    person1.setName("Greg");
+    console.log(person1.getName()); //"Greg"
+    var person2 = new Person1("Michael");
+    console.log(person1.getName()); //"Michael"
+    console.log(person2.getName()); //"Michael"
+
+    // 4.2 模块模式
+    var singleton = {
+        name: 'joe',
+        method: function () { return this.name; }
+    }; // 以字面量的方式来创建单例对象
+    //singleton.name = 'john';
+    //console.log(singleton.method());
+
+    var application = function () {
+        //私有变量和函数
+        var components = new Array();
+        //初始化
+        components.push(new Person('Joe'));
+        components.push(new Person('Joe'));
+        //公共
+        return {
+            getComponentCount: function () {
+                return components.length;
+            },
+            registerComponent: function (component) {
+                if (typeof component == "object") {
+                    components.push(component);
+                }
+            }
+        };
+    }();
+    console.log(application.getComponentCount());
+    application.registerComponent(new Person('Joe'));
+    console.log(application.getComponentCount());
+
+    // 4.3 增强的模块模式
+    var application1 = function () {
+        //私有变量和函数
+        var components = new Array();
+        //初始化
+        components.push(new Person('Joe'));
+        //创建 application 的一个局部副本
+        var app = new Person('G');
+        //公共接口
+        app.getComponentCount = function () {
+            return components.length;
+        };
+        app.registerComponent = function (component) {
+            if (typeof component == "object") {
+                components.push(component);
+            }
+        };
+        //返回这个副本
+        return app;
+    }();
+    console.log(application1.getComponentCount());
+    application1.registerComponent(new Person('Joe'));
+    console.log(application1.getComponentCount());
+    console.log(application1.getName());
+
+    //var test = function (a) {
+    //    this.a = a;
+    //    return function (b) { return this.a + b; }
+    //}(function (a, b) { return a; }(1, 2))
+    //alert(test(4)); // 5
+</script>

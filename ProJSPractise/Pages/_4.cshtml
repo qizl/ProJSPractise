@@ -1,0 +1,37 @@
+﻿<h1>第4章 变量、作用域和内存问题</h1>
+
+<script>
+    // 1.参数引用
+    function setName(obj) {
+        obj.name = 'Nicholas';
+        obj = new Object();
+        obj.name = 'joe';
+    }
+
+    var person = new Object();
+    person.name = 'pan';
+    console.log(person.name);
+    setName(person);
+    console.log(person.name);
+
+    // 2.检测类型
+    var s = "Nicholas";
+    var b = true;
+    var i = 22;
+    var u;
+    var n = null;
+    var o = new Object();
+    console.log(typeof s); // string
+    console.log(typeof i); // number
+    console.log(typeof b); // boolean
+    console.log(typeof u); // undefined
+    console.log(typeof n); // object
+    console.log(typeof o); // object
+
+    function human() {
+        this.age = 10;
+        this.speak = function () { return 'i can speak!'; };
+    }
+    var boy = new human();
+    console.log(boy instanceof human); // true
+</script>
