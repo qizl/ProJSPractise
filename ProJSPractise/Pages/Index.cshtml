@@ -6,6 +6,7 @@
 
 @section scripts{
 <script>
+    // 1.闭包与变量
     function createFunctions0() {
         var result = new Array();
 
@@ -28,12 +29,12 @@
 
         return result;
     }
-    // 1.闭包与变量
     var r0 = createFunctions0();
     console.log(r0[1]());
     var r = createFunctions();
     console.log(r[1]());
 
+    // 2.this对象
     var name = 'The Window';
     var object = {
         name: 'My Object',
@@ -49,9 +50,28 @@
             }
         }
     };
-    // 2.this对象
     console.log(object.getNameFunc()());
     console.log(object.getNameFunc1()());
+
+    // 3.模仿块级作用域
+    function outputNumbers(count) {
+        for (var i = 0; i < count; i++) {
+            console.log('for:' + i);
+        }
+
+        var i;
+        console.log('out:' + i); // 5
+    }
+    outputNumbers(5);
+
+    function outputNumbers1(count) {
+        (function () {
+            for (var i = 0; i < count; i++) { console.log('for:' + i); }
+        })();
+
+        //console.log('out:' + i); // error:i is not defined
+    }
+    outputNumbers1(5);
 </script>
 }
 
